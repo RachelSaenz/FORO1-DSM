@@ -1,4 +1,4 @@
-package com.example.foro1dsm.login
+package com.example.foro1dsm.register
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,20 +37,28 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.example.foro1dsm.login.AuthEvent
+import com.example.foro1dsm.login.AuthViewModel
 import com.example.foro1dsm.navigation.AppRoutes
 
 @Composable
-fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
-    val email by viewModel.loginEmail.collectAsStateWithLifecycle()
-    val password by viewModel.loginPassword.collectAsStateWithLifecycle()
-    val emailError by viewModel.loginEmailError.collectAsStateWithLifecycle()
-    val passwordError by viewModel.loginPasswordError.collectAsStateWithLifecycle()
+fun RegisterScreen(navController: NavController, viewModel: AuthViewModel) {
+    val name by viewModel.registerName.collectAsStateWithLifecycle()
+    val email by viewModel.registerEmail.collectAsStateWithLifecycle()
+    val password by viewModel.registerPassword.collectAsStateWithLifecycle()
+    val confirmPassword by viewModel.registerConfirmPassword.collectAsStateWithLifecycle()
+
+    val nameError by viewModel.registerNameError.collectAsStateWithLifecycle()
+    val emailError by viewModel.registerEmailError.collectAsStateWithLifecycle()
+    val passwordError by viewModel.registerPasswordError.collectAsStateWithLifecycle()
+    val confirmPasswordError by viewModel.registerConfirmPasswordError.collectAsStateWithLifecycle()
 
     val snackbarHostState = remember { SnackbarHostState() }
     var passwordVisible by remember { mutableStateOf(false) }
+    var confirmPasswordVisible by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        viewModel.loginEvents.collect { event ->
+        viewModel.registerEvents.collect { event ->
             when (event) {
                 is AuthEvent.NavigateToWelcome -> {
                     navController.navigate(AppRoutes.Welcome.route) {
@@ -75,14 +83,27 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Iniciar sesión",
+                text = "Crear cuenta",
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier.padding(bottom = 32.dp)
             )
 
             OutlinedTextField(
+                value = name,
+                onValueChange = viewModel::onRegisterNameChange,
+                label = { Text("Nombre") },
+                isError = nameError != null,
+                supportingText = { nameError?.let { Text(it) } },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            OutlinedTextField(
                 value = email,
-                onValueChange = viewModel::onLoginEmailChange,
+                onValueChange = viewModel::onRegisterEmailChange,
                 label = { Text("Correo electrónico") },
                 isError = emailError != null,
                 supportingText = { emailError?.let { Text(it) } },
@@ -95,7 +116,7 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
 
             OutlinedTextField(
                 value = password,
-                onValueChange = viewModel::onLoginPasswordChange,
+                onValueChange = viewModel::onRegisterPasswordChange,
                 label = { Text("Contraseña") },
                 isError = passwordError != null,
                 supportingText = { passwordError?.let { Text(it) } },
@@ -116,21 +137,46 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
                 modifier = Modifier.fillMaxWidth()
             )
 
+            Spacer(modifier = Modifier.height(4.dp))
+
+            OutlinedTextField(
+                value = confirmPassword,
+                onValueChange = viewModel::onRegisterConfirmPasswordChange,
+                label = { Text("Confirmar contraseña") },
+                isError = confirmPasswordError != null,
+                supportingText = { confirmPasswordError?.let { Text(it) } },
+                visualTransformation = if (confirmPasswordVisible) VisualTransformation.None
+                                       else PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                trailingIcon = {
+                    IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
+                        Icon(
+                            imageVector = if (confirmPasswordVisible) Icons.Filled.Visibility
+                                          else Icons.Filled.VisibilityOff,
+                            contentDescription = if (confirmPasswordVisible) "Ocultar contraseña"
+                                                 else "Mostrar contraseña"
+                        )
+                    }
+                },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
+            )
+
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
-                onClick = viewModel::validateAndLogin,
+                onClick = viewModel::validateAndRegister,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Iniciar sesión")
+                Text("Crear cuenta")
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
             TextButton(
-                onClick = { navController.navigate(AppRoutes.Register.route) }
+                onClick = { navController.navigateUp() }
             ) {
-                Text("¿No tienes cuenta? Regístrate")
+                Text("¿Ya tienes cuenta? Inicia sesión")
             }
         }
     }
