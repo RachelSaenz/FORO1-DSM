@@ -9,7 +9,6 @@ import com.example.foro1dsm.ui.theme.Foro1DSMTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             Foro1DSMTheme {
                 AppNavigation()
