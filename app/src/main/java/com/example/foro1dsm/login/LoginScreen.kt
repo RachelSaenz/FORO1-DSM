@@ -53,7 +53,7 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
         viewModel.loginEvents.collect { event ->
             when (event) {
                 is AuthEvent.NavigateToWelcome -> {
-                    navController.navigate(AppRoutes.Welcome.route) {
+                    navController.navigate("welcome/$email") {
                         popUpTo(AppRoutes.Login.route) { inclusive = true }
                     }
                 }

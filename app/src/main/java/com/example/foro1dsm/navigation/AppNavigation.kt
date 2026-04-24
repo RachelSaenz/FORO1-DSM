@@ -41,8 +41,12 @@ fun AppNavigation() {
             RegisterScreen(navController, authViewModel)
         }
 
-        composable(AppRoutes.Welcome.route) {
-            WelcomeScreen(navController)
+        composable(AppRoutes.Welcome.route) { backStackEntry ->
+            val email = backStackEntry.arguments?.getString("email") ?: ""
+            WelcomeScreen(
+                navController = navController,
+                email = email
+            )
         }
 
         composable(AppRoutes.Grades.route) {
