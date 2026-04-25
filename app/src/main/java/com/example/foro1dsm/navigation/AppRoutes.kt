@@ -5,5 +5,5 @@ sealed class AppRoutes(val route: String) {
     object Register : AppRoutes("register")
     object Welcome : AppRoutes("welcome/{email}")
     object Grades : AppRoutes("grades")
-    object Result : AppRoutes("result")
+    object Result : AppRoutes("result/{average}")
 }

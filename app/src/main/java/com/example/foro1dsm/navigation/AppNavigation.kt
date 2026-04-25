@@ -4,9 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.foro1dsm.login.AuthViewModel
 import com.example.foro1dsm.login.AuthViewModelFactory
 import com.example.foro1dsm.data.UserDatabase
@@ -53,8 +55,12 @@ fun AppNavigation() {
             GradesScreen(navController)
         }
 
-        composable(AppRoutes.Result.route) {
-            ResultScreen(navController)
+        composable(
+            route = AppRoutes.Result.route,
+            arguments = listOf(navArgument("average") { type = NavType.FloatType })
+        ) { backStackEntry ->
+            val average = backStackEntry.arguments?.getFloat("average")?.toDouble() ?: 0.0
+            ResultScreen(navController, average)
         }
     }
 }
