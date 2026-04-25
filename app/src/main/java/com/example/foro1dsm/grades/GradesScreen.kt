@@ -105,8 +105,10 @@ fun GradesScreen(navController: NavController) {
 
         Button(
             onClick = {
-                navController.navigate(AppRoutes.Result.route)
+                val formattedAverage = String.format(Locale.US, "%.2f", average ?: 0.0)
+                navController.navigate("result/$formattedAverage")
             },
+            enabled = average != null,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Ir a Resultado")
