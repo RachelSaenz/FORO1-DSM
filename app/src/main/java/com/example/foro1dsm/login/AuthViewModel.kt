@@ -110,12 +110,38 @@ class AuthViewModel(private val repository: UserRepository) : ViewModel() {
             }
         }
     }
+    // --clean loginscreen after entering --
+    fun clearLoginFields() {
+        _loginEmail.value = ""
+        _loginPassword.value = ""
 
-    // ——— Register: validate then create account ———
+        _loginEmailError.value = null
+        _loginPasswordError.value = null
+    }
+    // -- clean registerscreen --
+    fun clearRegisterFields() {
+        _registerName.value = ""
+        _registerEmail.value = ""
+        _registerPassword.value = ""
+        _registerConfirmPassword.value = ""
+
+        _registerNameError.value = null
+        _registerEmailError.value = null
+        _registerPasswordError.value = null
+        _registerConfirmPasswordError.value = null
+    }
+    // ——— Register: validate then create account updated! ———
     fun validateAndRegister() {
-        val nameError = if (_registerName.value.isEmpty()) "El nombre es obligatorio" else null
+        val nameError = when {
+            _registerName.value.isEmpty() -> "El nombre es obligatorio"
+            !_registerName.value.matches(Regex("^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$")) ->
+                "Solo se permiten letras"
+            else -> null
+        }
+
         val emailError = validateEmail(_registerEmail.value)
         val passwordError = validatePassword(_registerPassword.value)
+
         val confirmError = when {
             _registerConfirmPassword.value.isEmpty() -> "Confirma tu contraseña"
             _registerConfirmPassword.value != _registerPassword.value -> "Las contraseñas no coinciden"

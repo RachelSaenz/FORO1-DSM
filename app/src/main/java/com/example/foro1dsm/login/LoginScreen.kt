@@ -50,6 +50,8 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
     var passwordVisible by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
+        viewModel.clearLoginFields()
+
         viewModel.loginEvents.collect { event ->
             when (event) {
                 is AuthEvent.NavigateToWelcome -> {
@@ -57,7 +59,9 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
                         popUpTo(AppRoutes.Login.route) { inclusive = true }
                     }
                 }
-                is AuthEvent.ShowSnackbar -> snackbarHostState.showSnackbar(event.message)
+                is AuthEvent.ShowSnackbar -> {
+                    snackbarHostState.showSnackbar(event.message)
+                }
             }
         }
     }
