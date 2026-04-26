@@ -1,16 +1,27 @@
 # FORO1-DSM
+Aplicación para gestionar notas de estudiantes, 
+con autenticación de usuarios, cálculo automático de 
+promedio y validación de datos.
 
 Aplicación Android desarrollada en **Kotlin** con **Jetpack Compose**
 
 ## Estado actual del proyecto
 
-Ya se encuentra lista la base estructural del proyecto, incluyendo:
+Ya se encuentra listo el proyecto incluyendo:
 
 - Creación del proyecto en Android Studio
 - Configuración inicial con Jetpack Compose
 - Organización de paquetes
-- Creación de pantallas base
+- Creación de pantallas base requeridas
 - Navegación funcional entre módulos
+
+## Funcionalidades principales
+- Registro de usuarios con validación
+- Inicio de sesión con autenticación local
+- Ingreso de notas con validación numérica
+- Cálculo automático de promedio
+- Evaluación de aprobación/reprobación
+- Persistencia de usuarios con base de datos local
 
 ## Estructura actual
 
@@ -23,15 +34,17 @@ El proyecto actualmente contiene los siguientes paquetes principales:
 - `com.example.foro1dsm.navigation`
 - `com.example.foro1dsm.ui.theme`
 
-## Flujo actual funcionando
+## Flujo de funcionamiento 
 
-La navegación base ya funciona en este orden:
+La navegación base se desarrolla en este orden:
 
-1. Login
-2. Bienvenida
-3. Ingreso de Notas
-4. Resultado
-5. Retorno a Login
+1. Login → validación → acceso
+2. Registro → validación → creación usuario
+3. Bienvenida → muestra nombre 
+4. Ingreso de Notas
+5. Notas → cálculo
+6. Resultado → decisión (aprobado/reprobado)
+7. Retorno a Login
 
 ## Puntos implementados
 
@@ -42,6 +55,18 @@ La navegación base ya funciona en este orden:
 - `AppRoutes.kt`
 - `AppNavigation.kt`
 - `MainActivity.kt`
+
+## Persistencia de datos
+- Se usa Room
+- Los usuarios se guardan localmente
+- Contraseñas encriptadas con SHA-256
+
+## Validaciones implementadas
+- Email válido
+- Contraseña segura
+- Nombre solo letras
+- Notas entre 0 y 10
+- Campos obligatorios
 
 ## Requisitos para ejecutar el proyecto
 

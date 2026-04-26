@@ -56,16 +56,20 @@ fun RegisterScreen(navController: NavController, viewModel: AuthViewModel) {
     val snackbarHostState = remember { SnackbarHostState() }
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
-
+//--updated--
     LaunchedEffect(Unit) {
+        viewModel.clearRegisterFields()
+
         viewModel.registerEvents.collect { event ->
             when (event) {
                 is AuthEvent.NavigateToWelcome -> {
-                    navController.navigate(AppRoutes.Welcome.route) {
+                    navController.navigate("welcome/${email}") {
                         popUpTo(AppRoutes.Login.route) { inclusive = true }
                     }
                 }
-                is AuthEvent.ShowSnackbar -> snackbarHostState.showSnackbar(event.message)
+                is AuthEvent.ShowSnackbar -> {
+                    snackbarHostState.showSnackbar(event.message)
+                }
             }
         }
     }

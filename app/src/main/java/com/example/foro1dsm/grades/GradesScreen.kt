@@ -25,14 +25,25 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.foro1dsm.navigation.AppRoutes
 
 @Composable
 fun GradesScreen(navController: NavController) {
     var note1 by remember { mutableStateOf("") }
     var note2 by remember { mutableStateOf("") }
     var note3 by remember { mutableStateOf("") }
+
+    var error1 by remember { mutableStateOf<String?>(null) }
+    var error2 by remember { mutableStateOf<String?>(null) }
+    var error3 by remember { mutableStateOf<String?>(null) }
+
     var average by remember { mutableStateOf<Double?>(null) }
+
+    fun validateNote(value: String): String? {
+        if (value.isBlank()) return "Campo obligatorio"
+        val number = value.toDoubleOrNull() ?: return "Debe ser un número válido"
+        if (number < 0 || number > 10) return "Debe estar entre 0 y 10"
+        return null
+    }
 
     Column(
         modifier = Modifier
@@ -54,6 +65,8 @@ fun GradesScreen(navController: NavController) {
             value = note1,
             onValueChange = { note1 = it },
             label = { Text("Nota 1") },
+            isError = error1 != null,
+            supportingText = { error1?.let { Text(it) } },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             modifier = Modifier.fillMaxWidth()
         )
@@ -64,6 +77,8 @@ fun GradesScreen(navController: NavController) {
             value = note2,
             onValueChange = { note2 = it },
             label = { Text("Nota 2") },
+            isError = error2 != null,
+            supportingText = { error2?.let { Text(it) } },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             modifier = Modifier.fillMaxWidth()
         )
@@ -74,6 +89,8 @@ fun GradesScreen(navController: NavController) {
             value = note3,
             onValueChange = { note3 = it },
             label = { Text("Nota 3") },
+            isError = error3 != null,
+            supportingText = { error3?.let { Text(it) } },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             modifier = Modifier.fillMaxWidth()
         )
@@ -82,10 +99,18 @@ fun GradesScreen(navController: NavController) {
 
         Button(
             onClick = {
-                val n1 = note1.toDoubleOrNull() ?: 0.0
-                val n2 = note2.toDoubleOrNull() ?: 0.0
-                val n3 = note3.toDoubleOrNull() ?: 0.0
-                average = (n1 + n2 + n3) / 3
+                error1 = validateNote(note1)
+                error2 = validateNote(note2)
+                error3 = validateNote(note3)
+
+                if (error1 == null && error2 == null && error3 == null) {
+                    val n1 = note1.toDouble()
+                    val n2 = note2.toDouble()
+                    val n3 = note3.toDouble()
+                    average = (n1 + n2 + n3) / 3
+                } else {
+                    average = null
+                }
             },
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -113,5 +138,19 @@ fun GradesScreen(navController: NavController) {
         ) {
             Text("Ir a Resultado")
         }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Button(
+            onClick = {
+                navController.navigate("login") {
+                    popUpTo(0) { inclusive = true }
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Cerrar sesión")
+        }
+
+        }
     }
-}
